@@ -18,11 +18,15 @@ public partial class UniDatabaseContext : DbContext
 
     public virtual DbSet<Asignatura> Asignaturas { get; set; }
 
-    public virtual DbSet<AsignaturasEstudiante> AsignaturasEstudiantes { get; set; }
+    public virtual DbSet<AsignaturasMatricula> AsignaturasMatriculas { get; set; }
+
+    public virtual DbSet<AsignaturasProfesor> AsignaturasProfesors { get; set; }
 
     public virtual DbSet<Credito> Creditos { get; set; }
 
-    public virtual DbSet<EstadoMatricula> EstadoMatriculas { get; set; }
+    public virtual DbSet<Matricula> Matriculas { get; set; }
+
+    public virtual DbSet<PeriodoAcademico> PeriodoAcademicos { get; set; }
 
     public virtual DbSet<Rol> Rols { get; set; }
 
@@ -36,56 +40,78 @@ public partial class UniDatabaseContext : DbContext
         {
             entity.ToTable("Asignatura");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Codigo)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Nombre)
-                .HasMaxLength(1)
+                .HasMaxLength(200)
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<AsignaturasEstudiante>(entity =>
+        modelBuilder.Entity<AsignaturasMatricula>(entity =>
         {
-            entity.ToTable("AsignaturasEstudiante");
+            entity.ToTable("AsignaturasMatricula");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
-
-            entity.HasOne(d => d.IdAsignaturaNavigation).WithMany(p => p.AsignaturasEstudiantes)
+            entity.HasOne(d => d.IdAsignaturaNavigation).WithMany(p => p.AsignaturasMatriculas)
                 .HasForeignKey(d => d.IdAsignatura)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Asignatura_TO_AsignaturasEstudiante");
+                .HasConstraintName("FK_Asignatura_TO_AsignaturasMatricula");
 
-            entity.HasOne(d => d.IdEstadoNavigation).WithMany(p => p.AsignaturasEstudiantes)
-                .HasForeignKey(d => d.IdEstado)
+            entity.HasOne(d => d.IdMatriculaNavigation).WithMany(p => p.AsignaturasMatriculas)
+                .HasForeignKey(d => d.IdMatricula)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_EstadoMatricula_TO_AsignaturasEstudiante");
+                .HasConstraintName("FK_Matricula_TO_AsignaturasMatricula");
 
-            entity.HasOne(d => d.IdEstudianteNavigation).WithMany(p => p.AsignaturasEstudianteIdEstudianteNavigations)
-                .HasForeignKey(d => d.IdEstudiante)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Usuario_TO_AsignaturasEstudiante");
-
-            entity.HasOne(d => d.IdProfesorNavigation).WithMany(p => p.AsignaturasEstudianteIdProfesorNavigations)
+            entity.HasOne(d => d.IdProfesorNavigation).WithMany(p => p.AsignaturasMatriculas)
                 .HasForeignKey(d => d.IdProfesor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Usuario_TO_AsignaturasEstudiante1");
+                .HasConstraintName("FK_Usuario_TO_AsignaturasMatricula");
+        });
+
+        modelBuilder.Entity<AsignaturasProfesor>(entity =>
+        {
+            entity.ToTable("AsignaturasProfesor");
+
+            entity.HasOne(d => d.IdAsignaturaNavigation).WithMany(p => p.AsignaturasProfesors)
+                .HasForeignKey(d => d.IdAsignatura)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Asignatura_TO_AsignaturasProfesor");
+
+            entity.HasOne(d => d.IdProfesorNavigation).WithMany(p => p.AsignaturasProfesors)
+                .HasForeignKey(d => d.IdProfesor)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Usuario_TO_AsignaturasProfesor");
         });
 
         modelBuilder.Entity<Credito>(entity =>
         {
-            entity.Property(e => e.Id).ValueGeneratedNever();
-
             entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Creditos)
                 .HasForeignKey(d => d.IdUsuario)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Usuario_TO_Creditos");
         });
 
-        modelBuilder.Entity<EstadoMatricula>(entity =>
+        modelBuilder.Entity<Matricula>(entity =>
         {
-            entity.ToTable("EstadoMatricula");
+            entity.ToTable("Matricula");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Estado)
-                .HasMaxLength(1)
+            entity.HasOne(d => d.IdEstudianteNavigation).WithMany(p => p.Matriculas)
+                .HasForeignKey(d => d.IdEstudiante)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Usuario_TO_Matricula");
+
+            entity.HasOne(d => d.IdPeriodoAcademicoNavigation).WithMany(p => p.Matriculas)
+                .HasForeignKey(d => d.IdPeriodoAcademico)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PeriodoAcademico_TO_Matricula");
+        });
+
+        modelBuilder.Entity<PeriodoAcademico>(entity =>
+        {
+            entity.ToTable("PeriodoAcademico");
+
+            entity.Property(e => e.Periodo)
+                .HasMaxLength(100)
                 .IsUnicode(false);
         });
 
@@ -93,7 +119,6 @@ public partial class UniDatabaseContext : DbContext
         {
             entity.ToTable("Rol");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Rol1)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -104,7 +129,9 @@ public partial class UniDatabaseContext : DbContext
         {
             entity.ToTable("Usuario");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Documento)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Nombre)
                 .HasMaxLength(200)
                 .IsUnicode(false);
@@ -113,8 +140,6 @@ public partial class UniDatabaseContext : DbContext
         modelBuilder.Entity<UsuarioRol>(entity =>
         {
             entity.ToTable("UsuarioRol");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
 
             entity.HasOne(d => d.IdRolNavigation).WithMany(p => p.UsuarioRols)
                 .HasForeignKey(d => d.IdRol)

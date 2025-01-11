@@ -9,11 +9,15 @@ public partial class Usuario
 
     public string? Nombre { get; set; }
 
-    public virtual ICollection<AsignaturasEstudiante> AsignaturasEstudianteIdEstudianteNavigations { get; set; } = new List<AsignaturasEstudiante>();
+    public string? Documento { get; set; }
 
-    public virtual ICollection<AsignaturasEstudiante> AsignaturasEstudianteIdProfesorNavigations { get; set; } = new List<AsignaturasEstudiante>();
+    public virtual ICollection<AsignaturasMatricula> AsignaturasMatriculas { get; set; } = new List<AsignaturasMatricula>();
+
+    public virtual ICollection<AsignaturasProfesor> AsignaturasProfesors { get; set; } = new List<AsignaturasProfesor>();
 
     public virtual ICollection<Credito> Creditos { get; set; } = new List<Credito>();
+
+    public virtual ICollection<Matricula> Matriculas { get; set; } = new List<Matricula>();
 
     public virtual ICollection<UsuarioRol> UsuarioRols { get; set; } = new List<UsuarioRol>();
 }

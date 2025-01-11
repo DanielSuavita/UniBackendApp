@@ -9,7 +9,11 @@ public partial class Asignatura
 
     public string? Nombre { get; set; }
 
+    public string? Codigo { get; set; }
+
     public int? CantidadCreditosNecesarios { get; set; }
 
-    public virtual ICollection<AsignaturasEstudiante> AsignaturasEstudiantes { get; set; } = new List<AsignaturasEstudiante>();
+    public virtual ICollection<AsignaturasMatricula> AsignaturasMatriculas { get; set; } = new List<AsignaturasMatricula>();
+
+    public virtual ICollection<AsignaturasProfesor> AsignaturasProfesors { get; set; } = new List<AsignaturasProfesor>();
 }

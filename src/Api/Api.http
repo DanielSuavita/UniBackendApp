@@ -1,6 +1,44 @@
-@Api_HostAddress = http://localhost:5088
+@Api_HostAddress = http://localhost:5088/api
+@Api_Version = v1
 
-GET {{Api_HostAddress}}/weatherforecast/
+
+GET {{Api_HostAddress}}/health
+Accept: application/json
+
+###
+
+GET {{Api_HostAddress}}/{{Api_Version}}/GetAsignatura
+Accept: application/json
+
+###
+
+GET {{Api_HostAddress}}/{{Api_Version}}/GetAsignaturaByEstudiante
+Accept: application/json
+
+###
+
+POST {{Api_HostAddress}}/{{Api_Version}}/CreateMatricula
+Accept: application/json
+
+###
+
+GET {{Api_HostAddress}}/{{Api_Version}}/GetAsignaturasByProfesor
+Accept: application/json
+
+###
+
+GET {{Api_HostAddress}}/{{Api_Version}}/GetUsuario/4
+Accept: application/json
+
+###
+
+GET {{Api_HostAddress}}/{{Api_Version}}/GetProfesorByAsignatura/1
+Accept: application/json
+
+###
+
+
+GET {{Api_HostAddress}}/{{Api_Version}}/GetAsignaturaByEstudiante/4
 Accept: application/json
 
 ###
